@@ -1,0 +1,26 @@
+{
+  "name": "noopcoder",
+  "version": "1.0.0",
+  "description": "Coding Agent Harness — AI4SE Final Project",
+  "main": "dist/cli/main.js",
+  "bin": {
+    "noopcoder": "./dist/cli/main.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli/main.js",
+    "test": "jest --forceExit --detectOpenHandles",
+    "test:mock": "jest --forceExit --detectOpenHandles --testPathIgnorePatterns='openai-compatible'",
+    "demo": "node dist/demo/run-all.js"
+  },
+  "dependencies": {
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.3.0"
+  }
+}
