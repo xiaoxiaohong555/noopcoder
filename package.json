@@ -10,7 +10,7 @@
     "build": "tsc",
     "start": "node dist/cli/main.js",
     "test": "jest --forceExit --detectOpenHandles",
-    "test:mock": "jest --forceExit --detectOpenHandles --testPathIgnorePatterns='openai-compatible'",
+    "test:mock": "jest --forceExit --detectOpenHandles --no-cache --testPathIgnorePatterns='openai-compatible'",
     "demo": "node dist/demo/run-all.js"
   },
   "dependencies": {
