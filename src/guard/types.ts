@@ -1,3 +1,5 @@
+// ─── Guard Types ───────────────────────────────────────
+
 export interface GuardRule {
   pattern: string;
   matchOn: "command" | "path" | "action_type";
