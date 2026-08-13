@@ -35,8 +35,8 @@ describe("WriteFileTool", () => {
   });
 
   test("returns error for invalid path", async () => {
-    // On Windows, use invalid characters like < > to trigger a write failure
-    const result = await tool.execute({ type: "write_file", path: `${tmpDir}/<invalid>`, content: "test" });
+    // Writing to a directory path should fail (cross-platform, unlike Windows-only < > chars)
+    const result = await tool.execute({ type: "write_file", path: tmpDir, content: "test" });
     expect(result.success).toBe(false);
     expect(result.output).toContain("写入失败");
   });
