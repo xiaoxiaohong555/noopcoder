@@ -3,6 +3,8 @@
 > AI4SE 期末项目 A 类。从零实现的 Coding Agent Harness，含 mock-LLM 可测试性、三层治理护栏、反馈闭环。
 >
 > **核心命题：Agent = LLM + Harness。LLM 只占一行任务决策，其余全是工程。**
+>
+> [![CI](https://github.com/xiaoxiaohong555/noopcoder/actions/workflows/ci.yml/badge.svg)](https://github.com/xiaoxiaohong555/noopcoder/actions)
 
 ## 快速开始
 
@@ -26,6 +28,28 @@ docker build -t noopcoder .
 docker run -it -e NOOPCODER_API_KEY=sk-xxx noopcoder run "你的任务"
 ```
 
+### 云部署
+
+```bash
+# 在服务器上
+docker build -t noopcoder .
+docker run -d --restart=unless-stopped \
+  -e NOOPCODER_API_KEY=sk-xxx \
+  --name noopcoder \
+  noopcoder run "自动执行任务"
+```
+
+## 机制演示
+
+```bash
+npm run demo
+```
+
+无需网络、无需真实 LLM，确定性复现三个场景：
+1. **治理护栏拦截危险动作** — `rm -rf /` 被 RuleGuard 拦截 ✅
+2. **反馈闭环使 Agent 改变行为** — MockLLM + MockSensor 驱动自我修正 ✅
+3. **沙箱路径穿越防护** — `/project/../etc/passwd` 被 SandboxGuard 拦截 ✅
+
 ## API Key 安全
 
 - **本地**：通过 `noopcoder setup` 交互式录入，存储在 `~/.noopcoder/credentials`
@@ -39,17 +63,6 @@ npm test              # 全部测试
 npm run test:mock     # 仅 mock 测试（无需网络，无需真实 LLM）
 npm run demo          # 机制演示（3 个场景确定性复现）
 ```
-
-## 机制演示
-
-```bash
-npm run demo
-```
-
-输出三个场景的确定性验证：
-1. **治理护栏拦截危险动作** — `rm -rf /` 被 RuleGuard 拦截
-2. **反馈闭环使 Agent 改变行为** — MockLLM 写坏代码 → MockSensor 报失败 → Agent 修正
-3. **沙箱路径穿越防护** — `/project/../etc/passwd` 被 SandboxGuard 路径规范化拦截
 
 ## 架构
 
@@ -107,9 +120,21 @@ src/
 
 ## 分发
 
-Docker 镜像。
+### Docker 镜像
 
-## 技术栈
+```bash
+# 构建
+docker build -t noopcoder .
+
+# 运行（API Key 通过环境变量注入）
+docker run -it -e NOOPCODER_API_KEY=sk-xxx noopcoder run "你的任务"
+```
+
+**Key 安全配置**：容器内不支持文件凭据存储，统一使用环境变量 `NOOPCODER_API_KEY` 注入。
+
+**已知限制**：沙箱路径限制在容器内生效；仅支持 OpenAI 兼容 API。
+
+### 技术栈
 
 - TypeScript 5.x + Node.js 20+
 - Jest（测试框架）
